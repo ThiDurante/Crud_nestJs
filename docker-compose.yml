@@ -11,8 +11,6 @@ services:
       # Garanta que não haverá conflitos de porta com um mongodb que esteja
       # rodando localmente
       - 27017:27017
-    volumes:
-      - ./data:/data/db
 # Serviço que irá rodar a aplicação
   app:
     container_name: nest_crud_app
