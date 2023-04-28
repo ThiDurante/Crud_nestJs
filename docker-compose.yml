@@ -1,0 +1,30 @@
+version: '3'
+services:
+# Serviço que irá rodar o mongodb
+  mongodb:
+    container_name: nest_crud_mongodb
+    image: mongo:latest
+    restart: always
+    env_file:
+      - .env
+    ports:
+      # Garanta que não haverá conflitos de porta com um mongodb que esteja
+      # rodando localmente
+      - 27017:27017
+    volumes:
+      - ./data:/data/db
+# Serviço que irá rodar a aplicação
+  app:
+    container_name: nest_crud_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      # Garanta que não haverá conflitos de porta com um mongodb que esteja
+      # rodando localmente
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - mongodb
