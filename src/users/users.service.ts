@@ -6,21 +6,28 @@ import { User, UserDocument } from './Schemas/user.schema';
 import { Model } from 'mongoose';
 import { hashPassword } from 'src/utils/encryption';
 import { usersSeeds } from 'src/seeds/usersSeeds';
+import 'dotenv/config';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async onModuleInit() {
-    try {
-      const users = await this.userModel.find();
-      if (users.length < 1) {
-        Promise.all(
-          usersSeeds.map(async (user) => await this.userModel.create(user)),
-        );
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Development environment detected.');
+
+      try {
+        const users = await this.userModel.find();
+        if (users.length < 1) {
+          console.log('Seeding users...');
+          await Promise.all(
+            usersSeeds.map(async (user) => await this.userModel.create(user)),
+          );
+          console.log('Users seeded.');
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   }
 
