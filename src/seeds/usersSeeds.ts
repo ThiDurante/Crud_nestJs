@@ -1,7 +1,7 @@
 export const usersSeeds = [
   {
     username: 'pedro',
-    password: '123456',
+    password: '12345',
     email: 'arebaba@email.com',
     age: 33,
   },

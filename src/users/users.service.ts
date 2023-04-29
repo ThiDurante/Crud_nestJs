@@ -21,9 +21,14 @@ export class UsersService {
         if (users.length < 1) {
           console.log('Seeding users...');
           await Promise.all(
-            usersSeeds.map(async (user) => await this.userModel.create(user)),
+            usersSeeds.map(async (user) => {
+              const encryptedUser = await hashPassword(user);
+              await this.userModel.create(encryptedUser);
+            }),
           );
           console.log('Users seeded.');
+        } else {
+          console.log('Users decteted, skipping seeding phase.');
         }
       } catch (error) {
         console.log(error);
