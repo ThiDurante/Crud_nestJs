@@ -4,12 +4,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './Schemas/user.schema';
 import { Model } from 'mongoose';
+import { hashPassword } from 'src/utils/encryption';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-  create(createUserDto: CreateUserDto) {
-    const user = new this.userModel(createUserDto);
+  async create(createUserDto: CreateUserDto) {
+    const encryptedUser = await hashPassword(createUserDto);
+    console.log(encryptedUser);
+
+    const user = new this.userModel(encryptedUser);
     return user.save();
   }
 
@@ -19,6 +23,10 @@ export class UsersService {
 
   findOne(id: string) {
     return this.userModel.findById(id);
+  }
+
+  findByUsername(username: string) {
+    return this.userModel.findOne({ username });
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
