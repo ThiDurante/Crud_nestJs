@@ -15,7 +15,7 @@ $ docker compose up
 
 For now, a simple CRUD of users to simulate user manipulation on a real app.
 
-Users requiser a username, email, password and age.
+Users require a username, email, password and age.
 Have fun testing!
 
 ## References
